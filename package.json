@@ -1,6 +1,6 @@
 {
   "name": "onscreen-console",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Add a console on screen for those browsers or client (nwjs or electron) with no console",
   "main": "index.js",
   "scripts": {
