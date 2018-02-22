@@ -3,6 +3,7 @@
 
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, shrink-to-fit=no">
   <title>Onscreen Console Demo</title>
 </head>
 
@@ -22,13 +23,18 @@
     function b() {
       a();
     }
-    setInterval(b, 5000);
+    var i1 = setInterval(b, 5000);
 
     var methods = ['log', 'warn', 'error'];
-    setInterval(() => {
+    var i2 = setInterval(function() {
       var index = Math.floor(Math.random() * methods.length);
       console[methods[index]]('This is a(n) ' + methods[index]);
     }, 2000);
+    
+    setTimeout(function() {
+      clearInterval(i1);
+      clearInterval(i2);
+    }, 10000);
   </script>
 </body>
 

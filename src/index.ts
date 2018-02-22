@@ -146,8 +146,7 @@ export class OnScreenConsole {
 				color: ${OnScreenConsole._supportedColors[method]};
         background-color: ${OnScreenConsole._supportedColors[method]}11;
         border-top: 1px solid ${OnScreenConsole._supportedColors[method]}33;
-				padding: 6px;
-				width: 100%;
+				padding: 6px 12px;
 			`;
 			// set innerHTML
 			msgNode.innerHTML = args.join(' ');

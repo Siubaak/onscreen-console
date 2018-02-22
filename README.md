@@ -4,7 +4,7 @@
 
 ![](https://raw.githubusercontent.com/Siubaak/onscreen-console/master/demo.png)
 
-Add a console on screen for those browsers or client (nwjs or electron) with no console. The onscreen-console overwrites the native console.log, console.warn and console.error methods. If onscreen-console enable, you could use console.log, console.warn and console.error to print what your want in onscreen console panel.
+Add a console on screen for those browsers or clients (nwjs or electron) with no console. The onscreen-console overwrites the native console.log, console.warn and console.error methods. If onscreen-console enable, you could use console.log, console.warn and console.error to print what your want in onscreen console panel.
 
 # Usage
 
@@ -19,7 +19,7 @@ And then import.
 ```js
 import oConsole from 'onscreen-console';
 // enable onscreen-console and it will block native console
-// all print all logs on onscreen-console panel
+// print all logs on onscreen-console panel
 oConsole.enable();
 // show the onscreen-console panel
 oConsole.show();
@@ -43,7 +43,7 @@ Or, you can simple source at your html file, and the minimized file can be found
 <script type="text/javascript" src="onscreen-console.min.js"></script>
 <script type="text/javascript">
   // enable onscreen-console and it will block native console
-  // all print all logs on onscreen-console panel
+  // print all logs on onscreen-console panel
   oConsole.enable();
   // show the onscreen-console panel
   oConsole.show();
@@ -54,7 +54,7 @@ Or, you can simple source at your html file, and the minimized file can be found
   // or throw error what you want
   throw new Error('Error thrown');
   // hide the onscreen-console panel
-  // but it still working
+  // but it's still working
   oConsole.hide();
   // totally disable the onscreen-console
   // and all your favorite native console methods are back

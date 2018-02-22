@@ -70,7 +70,7 @@ var OnScreenConsole = (function () {
                 args[_i] = arguments[_i];
             }
             var msgNode = document.createElement('div');
-            msgNode.style.cssText = "\n\t\t\t\tfont-size: 14px;\n\t\t\t\tcolor: " + OnScreenConsole._supportedColors[method] + ";\n        background-color: " + OnScreenConsole._supportedColors[method] + "11;\n        border-top: 1px solid " + OnScreenConsole._supportedColors[method] + "33;\n\t\t\t\tpadding: 6px;\n\t\t\t\twidth: 100%;\n\t\t\t";
+            msgNode.style.cssText = "\n\t\t\t\tfont-size: 14px;\n\t\t\t\tcolor: " + OnScreenConsole._supportedColors[method] + ";\n        background-color: " + OnScreenConsole._supportedColors[method] + "11;\n        border-top: 1px solid " + OnScreenConsole._supportedColors[method] + "33;\n\t\t\t\tpadding: 6px 12px;\n\t\t\t";
             msgNode.innerHTML = args.join(' ');
             var consoleNode = document.querySelector('[onscreenconsole-id="panel"]');
             if (consoleNode) {
