@@ -1,0 +1,31 @@
+{
+  "name": "onscreen-console",
+  "version": "1.0.0",
+  "description": "Add a console on screen for those browsers or client (nwjs or electron) with no console",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "tsc && webpack && cp dist/min/onscreen-console.min.js docs/index.js",
+    "build": "tsc && webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Siubaak/onscreen-console.git"
+  },
+  "keywords": [
+    "onscreen",
+    "console"
+  ],
+  "author": "Siubaak",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Siubaak/onscreen-console/issues"
+  },
+  "homepage": "https://github.com/Siubaak/onscreen-console#readme",
+  "devDependencies": {
+    "ts-loader": "^3.5.0",
+    "typescript": "^2.7.2",
+    "uglifyjs-webpack-plugin": "^1.2.0",
+    "webpack": "^3.11.0"
+  }
+}

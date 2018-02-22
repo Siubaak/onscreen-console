@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Onscreen Console Demo</title>
+</head>
+
+<body>
+  <h1>Onscreen Console</h1>
+  <p>I have set two internal to console some info or throw errors</p>
+  <p>Onscreen Console internally overwrites the native log, warn and error methods of console</p>
+  <p>You could try yourself in your native console</p>
+  <script type="text/javascript" src="index.js"></script>
+  <script>
+    oConsole.enable();
+    oConsole.show();
+    
+    function a() {
+      throw new Error('Error thrown');
+    }
+    function b() {
+      a();
+    }
+    setInterval(b, 5000);
+
+    var methods = ['log', 'warn', 'error'];
+    setInterval(() => {
+      var index = Math.floor(Math.random() * methods.length);
+      console[methods[index]]('This is a(n) ' + methods[index]);
+    }, 2000);
+  </script>
+</body>
+
+</html>
