@@ -1,7 +1,8 @@
 export type consoleFunc = (message?: any, ...optionalParams: any[]) => void;
 
 export class OnScreenConsole {
-  private _consoleNode: HTMLDivElement;
+	private _consoleNode: HTMLDivElement;
+	private _inputNode: HTMLInputElement;
   private _log: consoleFunc;
   private _warn: consoleFunc;
   private _error: consoleFunc;
@@ -27,28 +28,7 @@ export class OnScreenConsole {
 			const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]');
 			if (consoleNode) {
 				if (err && err.stack) {
-					// format the output
-					const msg: string[] = err.stack.split('\n');
-					// msg[0] is the error info. skip this
-					for(let i = 1; i < msg.length; ++i) {
-						// the error stack trace
-						// eg: at testfunc (http://xxx.com/test.js:130:32)
-						const line = msg[i].trim().split(' ');
-						// get file name, eg: test.js:130:32
-						const line2 = line.length === 3 ? line[2] : line[1];
-						const paths = line2.split('/');
-						let fileName = paths[paths.length - 1];
-						fileName = fileName.substring(0, fileName.length - 1);
-						// get file path, eg: http://xxx.com/test.js
-						let filePath = line2.substring(1, line2.length - 1).split(':');
-						// pop the colomn number, eg: 32
-						filePath.pop();
-						// pop the line number, eg: 130
-						filePath.pop();
-						// format markup
-						msg[i] = `&emsp;${line[0]} ${line.length === 3 ? `${line[1]} ` : ''}(<a href="${filePath.join(':')}">${fileName}</a>)`;
-					}
-					this.error(`${msg.join('<br/>')}`);
+					this.error(err.stack);
 				} else {
 					this.error(info);
 				}
@@ -131,6 +111,27 @@ export class OnScreenConsole {
 		showBtn.onclick = this.show.bind(this);
 		consoleNode.appendChild(showBtn);
 
+		this._inputNode = document.createElement('input');
+		this._inputNode.placeholder = '>';
+		this._inputNode.style.cssText = `
+			overflow: scroll;
+			padding: 6px 12px;
+			font-size: 14px;
+			border: none;
+			outline: none;
+			resize: none;
+			border-top: 1px solid #00000033;
+			width: 100%;
+		`;
+		this._inputNode.onkeypress = (e: KeyboardEvent) => {
+			if (e.keyCode === 13) {
+				console.log(eval((e.target as any).value) || 'undefined');
+				this._inputNode.value = '';
+			}
+		};
+		(this._inputNode as any)._history = [];
+		consoleNode.appendChild(this._inputNode);
+
 		return consoleNode;
 	}
 	/**
@@ -154,8 +155,8 @@ export class OnScreenConsole {
 			const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]');
 			if (consoleNode) {
 				// print the output
-				consoleNode.appendChild(msgNode);
-				consoleNode.scrollTop = consoleNode.scrollHeight;
+				this._consoleNode.insertBefore(msgNode, this._inputNode);
+				this._consoleNode.scrollTop = consoleNode.scrollHeight;
 			} else {
 				// if disable, invoke the native method first to print in console
 				this['_' + method](...args);

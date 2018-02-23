@@ -16,19 +16,7 @@ var OnScreenConsole = (function () {
             var consoleNode = document.querySelector('[onscreenconsole-id="panel"]');
             if (consoleNode) {
                 if (err && err.stack) {
-                    var msg = err.stack.split('\n');
-                    for (var i = 1; i < msg.length; ++i) {
-                        var line_1 = msg[i].trim().split(' ');
-                        var line2 = line_1.length === 3 ? line_1[2] : line_1[1];
-                        var paths = line2.split('/');
-                        var fileName = paths[paths.length - 1];
-                        fileName = fileName.substring(0, fileName.length - 1);
-                        var filePath = line2.substring(1, line2.length - 1).split(':');
-                        filePath.pop();
-                        filePath.pop();
-                        msg[i] = "&emsp;" + line_1[0] + " " + (line_1.length === 3 ? line_1[1] + " " : '') + "(<a href=\"" + filePath.join(':') + "\">" + fileName + "</a>)";
-                    }
-                    _this.error("" + msg.join('<br/>'));
+                    _this.error(err.stack);
                 }
                 else {
                     _this.error(info);
@@ -48,6 +36,7 @@ var OnScreenConsole = (function () {
         }
     };
     OnScreenConsole.prototype._createConsoleNode = function () {
+        var _this = this;
         var consoleNode = document.createElement('div');
         consoleNode.setAttribute('onscreenconsole-id', 'panel');
         consoleNode.style.cssText = "\n\t\t\tcursor: default;\n\t\t\tposition: fixed;\n\t\t\tz-index: 99;\n\t\t\theight: 240px;\n\t\t\twidth: 100%;\n\t\t\tbottom: -250px;\n\t\t\tleft: 0;\n\t\t\toverflow: scroll;\n\t\t\tbackground-color: #fff;\n\t\t\t-webkit-box-shadow: 0 -2px 5px #00000033;\n\t\t\t\t\t\t\tbox-shadow: 0 -2px 5px #00000033;\n\t\t\t-webkit-box-sizing: border-box;\n\t\t\t\t\t\t\tbox-sizing: border-box;\n\t\t\ttransition: all .2s;\n\t\t";
@@ -61,6 +50,17 @@ var OnScreenConsole = (function () {
         showBtn.innerHTML = '&uarr;';
         showBtn.onclick = this.show.bind(this);
         consoleNode.appendChild(showBtn);
+        this._inputNode = document.createElement('input');
+        this._inputNode.placeholder = '>';
+        this._inputNode.style.cssText = "\n\t\t\toverflow: scroll;\n\t\t\tpadding: 6px 12px;\n\t\t\tfont-size: 14px;\n\t\t\tborder: none;\n\t\t\toutline: none;\n\t\t\tresize: none;\n\t\t\tborder-top: 1px solid #00000033;\n\t\t\twidth: 100%;\n\t\t";
+        this._inputNode.onkeypress = function (e) {
+            if (e.keyCode === 13) {
+                console.log(eval(e.target.value) || 'undefined');
+                _this._inputNode.value = '';
+            }
+        };
+        this._inputNode._history = [];
+        consoleNode.appendChild(this._inputNode);
         return consoleNode;
     };
     OnScreenConsole.prototype._print = function (method) {
@@ -74,8 +74,8 @@ var OnScreenConsole = (function () {
             msgNode.innerHTML = args.join(' ');
             var consoleNode = document.querySelector('[onscreenconsole-id="panel"]');
             if (consoleNode) {
-                consoleNode.appendChild(msgNode);
-                consoleNode.scrollTop = consoleNode.scrollHeight;
+                this._consoleNode.insertBefore(msgNode, this._inputNode);
+                this._consoleNode.scrollTop = consoleNode.scrollHeight;
             }
             else {
                 this['_' + method].apply(this, args);
