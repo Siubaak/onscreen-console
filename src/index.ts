@@ -1,6 +1,10 @@
+const MAX_HISTORY_LENGTH: number = 20;
+
 export type consoleFunc = (message?: any, ...optionalParams: any[]) => void;
 
 export class OnScreenConsole {
+	private _showBtn: HTMLButtonElement;
+	private _hideBtn: HTMLButtonElement;
 	private _consoleNode: HTMLDivElement;
 	private _inputNode: HTMLInputElement;
   private _log: consoleFunc;
@@ -9,7 +13,7 @@ export class OnScreenConsole {
   private static _instance: OnScreenConsole;
 
 	constructor() {
-		this._consoleNode = this._createConsoleNode();
+		this._createNodes();
 		this._overwriteNativeMethods();
 		this._setErrorListener();
 	}
@@ -51,15 +55,14 @@ export class OnScreenConsole {
 	}
 	/**
 	 * create the console panel dom element
-	 * @return {HTMLDivElement}
 	 */
-	private _createConsoleNode(): HTMLDivElement {
-		const consoleNode: HTMLDivElement = document.createElement('div');
-		consoleNode.setAttribute('onscreenconsole-id', 'panel');
-		consoleNode.style.cssText = `
+	private _createNodes(): void {
+		this._consoleNode = document.createElement('div');
+		this._consoleNode.setAttribute('onscreenconsole-id', 'panel');
+		this._consoleNode.style.cssText = `
 			cursor: default;
 			position: fixed;
-			z-index: 99;
+			z-index: 995;
 			height: 240px;
 			width: 100%;
 			bottom: -250px;
@@ -73,12 +76,32 @@ export class OnScreenConsole {
 			transition: all .2s;
 		`;
 
-		const hideBtn: HTMLButtonElement = document.createElement('button');
-		hideBtn.style.cssText = `
+		this._showBtn = document.createElement('button');
+		this._showBtn.setAttribute('onscreenconsole-id', 'show');
+		this._showBtn.style.cssText = `
+			position: fixed;
+			z-index: 990;
+			height: 32px;
+			width: 48px;
+			bottom: 6px;
+			right: 6px;
+			color: #0089A7;
+			border: 1px solid #0089A7;
+			background-color: #fff;
+			cursor: pointer;
+			-webkit-box-shadow: 0 2px 5px #00000033;
+							box-shadow: 0 2px 5px #00000033;
+			transition: all .2s;
+		`;
+		this._showBtn.innerHTML = 'Show';
+		this._showBtn.onclick = this.show.bind(this);
+
+		this._hideBtn = document.createElement('button');
+		this._hideBtn.style.cssText = `
 			position: fixed;
 			z-index: 999;
 			height: 32px;
-			width: 32px;
+			width: 48px;
 			bottom: 6px;
 			right: 6px;
 			color: #0089A7;
@@ -87,29 +110,11 @@ export class OnScreenConsole {
 			cursor: pointer;
 			-webkit-box-shadow: 0 2px 5px #00000033;
 							box-shadow: 0 2px 5px #00000033;
+			transition: all .2s;
 		`;
-		hideBtn.innerHTML = '&darr;';
-		hideBtn.onclick = this.hide.bind(this);
-		consoleNode.appendChild(hideBtn);
-
-		const showBtn: HTMLButtonElement = document.createElement('button');
-		showBtn.style.cssText = `
-			position: fixed;
-			z-index: 9;
-			height: 32px;
-			width: 32px;
-			bottom: 6px;
-			right: 6px;
-			color: #0089A7;
-			border: 1px solid #0089A7;
-			background-color: #fff;
-			cursor: pointer;
-			-webkit-box-shadow: 0 2px 5px #00000033;
-							box-shadow: 0 2px 5px #00000033;
-		`;
-		showBtn.innerHTML = '&uarr;';
-		showBtn.onclick = this.show.bind(this);
-		consoleNode.appendChild(showBtn);
+		this._hideBtn.innerHTML = 'Hide';
+		this._hideBtn.onclick = this.hide.bind(this);
+		this._consoleNode.appendChild(this._hideBtn);
 
 		this._inputNode = document.createElement('input');
 		this._inputNode.placeholder = '>';
@@ -122,17 +127,45 @@ export class OnScreenConsole {
 			resize: none;
 			border-top: 1px solid #00000033;
 			width: 100%;
+			-webkit-box-sizing: border-box;
+							box-sizing: border-box;
 		`;
-		this._inputNode.onkeypress = (e: KeyboardEvent) => {
-			if (e.keyCode === 13) {
-				console.log(eval((e.target as any).value) || 'undefined');
+		let history: string[] = JSON.parse(localStorage.getItem('onscreen-console-history'));
+		let hisIndex: number = -1;
+		if (!Array.isArray(history)) {
+			history = [];
+		} else {
+			hisIndex = history.length;
+		}
+		this._inputNode.onkeydown = (e: KeyboardEvent) => {
+			if (e.keyCode === 13 && (e.target as any).value !== '') {	// enter
+				const result = eval((e.target as any).value);
+				console.log(result !== undefined ? result : 'undefined');
+				history.push((e.target as any).value);
+				while (history.length > MAX_HISTORY_LENGTH) {
+					history.shift();
+				}
+				localStorage.setItem('onscreen-console-history', JSON.stringify(history));
 				this._inputNode.value = '';
+        hisIndex = history.length;
+			} else if (e.keyCode === 38) {	// up
+				if (hisIndex > 0) {
+					hisIndex--;
+					this._inputNode.value = history[hisIndex];
+				} else if (hisIndex === 0) {
+					this._inputNode.value = history[hisIndex];
+				}
+			} else if (e.keyCode === 40) {	// down
+				if (hisIndex < history.length - 1) {
+					hisIndex++;
+					this._inputNode.value = history[hisIndex];
+				} else if (hisIndex === history.length - 1) {
+					hisIndex++;
+					this._inputNode.value = '';
+				}
 			}
 		};
-		(this._inputNode as any)._history = [];
-		consoleNode.appendChild(this._inputNode);
-
-		return consoleNode;
+		this._consoleNode.appendChild(this._inputNode);
 	}
 	/**
 	 * internal print method
@@ -143,6 +176,7 @@ export class OnScreenConsole {
 			// create error message dom element
 			const msgNode: HTMLDivElement = document.createElement('div');
 			msgNode.style.cssText = `
+				min-height: 20px;
 				font-size: 14px;
 				color: ${OnScreenConsole._supportedColors[method]};
         background-color: ${OnScreenConsole._supportedColors[method]}11;
@@ -150,7 +184,27 @@ export class OnScreenConsole {
 				padding: 6px 12px;
 			`;
 			// set innerHTML
-			msgNode.innerHTML = args.join(' ');
+			let msg: string[] = [];
+			for (const arg of args) {
+				if (Array.isArray(arg)) {
+					msg.push(`[${arg.join(', ')}]`);
+				} else if (typeof arg === 'object') {
+					let argMsg: any[] = [];
+					for (const key in arg) {
+						if (Array.isArray(arg[key])) {
+							argMsg.push(`${key}: [Array]`);
+						} else if (typeof arg[key] === 'function') {
+							argMsg.push(`${key}: [Function ${arg[key].name || 'anonymous'}]`);
+						} else {
+							argMsg.push(`${key}: ${arg[key]}`);
+						}
+					}
+					msg.push(`{${argMsg.join(', ')}}`);
+				} else {
+					msg.push(arg);
+				}
+			}
+			msgNode.innerHTML = msg.join(' ');
 			// check if it's enable
 			const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]');
 			if (consoleNode) {
@@ -181,6 +235,10 @@ export class OnScreenConsole {
 		if (!consoleNode) {
 			document.body.appendChild(this._consoleNode);
 		}
+		const showBtn: Element = document.querySelector('[onscreenconsole-id="show"]');
+		if (!showBtn) {
+			document.body.appendChild(this._showBtn);
+		}
 	}
 	/**
 	 * disable the on screen console
@@ -188,7 +246,11 @@ export class OnScreenConsole {
 	disable(): void {
 		const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]');
 		if (consoleNode) {
-			this._consoleNode.remove();
+			consoleNode.remove();
+		}
+		const showBtn: Element = document.querySelector('[onscreenconsole-id="show"]');
+		if (showBtn) {
+			showBtn.remove();	
 		}
 	}
 	/**
@@ -198,7 +260,7 @@ export class OnScreenConsole {
 		const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]');
 		if (consoleNode && this._consoleNode.style.bottom !== '0px') {
       this._consoleNode.style.bottom = '0px';
-			(this._consoleNode.children[0] as HTMLElement).style.bottom = '6px';
+			this._hideBtn.style.bottom = '6px';
     }
 	}
 	/**
@@ -208,8 +270,7 @@ export class OnScreenConsole {
 		const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]');
 		if (consoleNode && this._consoleNode.style.bottom === '0px') {
 			this._consoleNode.style.bottom = (-this._consoleNode.offsetHeight - 10) + 'px';
-      (this._consoleNode.children[0] as HTMLElement).style.bottom
-        = (-this._consoleNode.offsetHeight - 4) + 'px';
+      this._hideBtn.style.bottom = (-this._consoleNode.offsetHeight - 4) + 'px';
 		}
 	}
   // others
