@@ -30,14 +30,14 @@ console.error('This is a error');
 // or throw error what you want
 throw new Error('Error thrown');
 // hide the onscreen-console panel
-// but it still working
+// but it's still working
 oConsole.hide();
 // totally disable the onscreen-console
 // and all your favorite native console methods are back
 oConsole.disable();
 ```
 
-Or, you can simple source at your html file, and the minimized file can be found at [release](https://github.com/Siubaak/onscreen-console/releases). Download it and unzip, then you can find `onscreen-console/dist/min/onscreen-console.min.js` and source it as follow. It will bind a oConsole instance on window.
+Or, you can simply source at your html file, and the minimized file can be found at [release](https://github.com/Siubaak/onscreen-console/releases). Download it and unzip, then you can find `onscreen-console/dist/min/onscreen-console.min.js` and source it as follow. It will bind a oConsole instance on window.
 
 ```html
 <script type="text/javascript" src="onscreen-console.min.js"></script>
@@ -62,7 +62,7 @@ Or, you can simple source at your html file, and the minimized file can be found
 </script>
 ```
 
-You can use commander line to input your dev commands, and if you want to add a global variable, your need to bind it on window by yourself, as the demo below. Then you can use as a global variable.
+You can use command line to input your dev commands, and if you want to add a global variable, your need to bind it on window by yourself, as the demo below. Then you can use as a global variable.
 
 # Demo
 
