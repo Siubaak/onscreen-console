@@ -62,7 +62,7 @@ Or, you can simple source at your html file, and the minimized file can be found
 </script>
 ```
 
-You can use commander line to input your dev commands, and if you want add a global variable, your need to bind it on window by yourself, as the demo below. Then you can use as a global variable.
+You can use commander line to input your dev commands, and if you want to add a global variable, your need to bind it on window by yourself, as the demo below. Then you can use as a global variable.
 
 # Demo
 
