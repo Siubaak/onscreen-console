@@ -7,6 +7,6 @@
     "removeComments": true
   },
   "include": [
-    "src/index.ts"
+    "src"
   ]
 }
