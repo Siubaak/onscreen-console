@@ -144,20 +144,28 @@ class OnScreenConsole {
       const value: string = (e.target as any).value
       if (e.keyCode === 13 && value !== '') {	// enter
         let result: string
-        let evalErr: Error
+				let evalErr: Error
+				// disable console temporarily
+				const tmpConsole: Console = console
+				;(console as any) = {}
+				for (const method of OnScreenConsole._supportedMethods) {
+					;(console as any)[method] = () => {}
+				}
         try {
           result = eval(value)
         } catch(err) {
           evalErr = err
-        }
+				}
+				// restore console
+				console = tmpConsole
         if (evalErr) {
           console.error(evalErr)
         } else {
+          console.log(`<span style="color: #00000055">></span> ${value}`)
           const tmpScript = document.createElement('script')
           tmpScript.innerHTML = value
           document.body.appendChild(tmpScript)
           tmpScript.remove()
-          console.log(`<span style="color: #00000055">></span> ${value}`)
           console.log(`<span style="color: #00000055"><</span> ${format(result)}`)
         }
         history.push(value)

@@ -2,7 +2,7 @@
 
 [![](https://img.shields.io/npm/v/onscreen-console.svg?style=flat-square)](https://www.npmjs.com/package/onscreen-console)
 
-![](https://raw.githubusercontent.com/Siubaak/onscreen-console/master/assets/snapshot.png)
+![](https://raw.githubusercontent.com/Siubaak/onscreen-console/master/demo.gif)
 
 Add a console on screen for those browsers or clients (nwjs or electron) with no console. The onscreen-console overwrites the native console.log, console.warn and console.error methods. If onscreen-console enable, you could use console.log, console.warn and console.error to print what your want in onscreen console panel.
 
@@ -65,8 +65,6 @@ Or, you can simply source at your html file, and the minimized file can be found
 You can use command line to input your dev commands, and if you want to add a global variable, your need to bind it on window by yourself, as the demo below. Then you can use as a global variable.
 
 # Demo
-
-![](https://raw.githubusercontent.com/Siubaak/onscreen-console/master/assets/demo.gif)
 
 [Try onscreen-console](https://siubaak.github.io/onscreen-console)
 

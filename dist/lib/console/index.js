@@ -68,21 +68,29 @@ var OnScreenConsole = (function () {
             if (e.keyCode === 13 && value !== '') {
                 var result = void 0;
                 var evalErr = void 0;
+                var tmpConsole = console;
+                console = {};
+                for (var _i = 0, _a = OnScreenConsole._supportedMethods; _i < _a.length; _i++) {
+                    var method = _a[_i];
+                    ;
+                    console[method] = function () { };
+                }
                 try {
                     result = eval(value);
                 }
                 catch (err) {
                     evalErr = err;
                 }
+                console = tmpConsole;
                 if (evalErr) {
                     console.error(evalErr);
                 }
                 else {
+                    console.log("<span style=\"color: #00000055\">></span> " + value);
                     var tmpScript = document.createElement('script');
                     tmpScript.innerHTML = value;
                     document.body.appendChild(tmpScript);
                     tmpScript.remove();
-                    console.log("<span style=\"color: #00000055\">></span> " + value);
                     console.log("<span style=\"color: #00000055\"><</span> " + utils_1.format(result));
                 }
                 history.push(value);
