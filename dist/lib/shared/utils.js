@@ -3,59 +3,23 @@ Object.defineProperty(exports, "__esModule", { value: true });
 function toString(value) {
     return Object.prototype.toString.call(value);
 }
-function isUndefined(value) {
-    return toString(value) === '[object Undefined]';
-}
-exports.isUndefined = isUndefined;
-function isNull(value) {
-    return toString(value) === '[object Null]';
-}
-exports.isNull = isNull;
-function isNumber(value) {
-    return toString(value) === '[object Number]';
-}
-exports.isNumber = isNumber;
-function isString(value) {
-    return toString(value) === '[object String]';
-}
-exports.isString = isString;
-function isArray(value) {
-    return toString(value) === '[object Array]';
-}
-exports.isArray = isArray;
-function isBoolean(value) {
-    return toString(value) === '[object Boolean]';
-}
-exports.isBoolean = isBoolean;
-function isSymbol(value) {
-    return toString(value) === '[object Symbol]';
-}
-exports.isSymbol = isSymbol;
-function isObject(value) {
-    return toString(value) === '[object Object]';
-}
-exports.isObject = isObject;
-function isFunction(value) {
-    return toString(value) === '[object Function]';
-}
-exports.isFunction = isFunction;
-function format(arg, expendObject) {
-    if (expendObject === void 0) { expendObject = true; }
-    if (isUndefined(arg)) {
-        return 'undefined';
-    }
-    else if (isNull(arg)) {
-        return 'null';
-    }
-    else if (isArray(arg)) {
-        return "[" + arg.join(', ') + "]";
-    }
-    else if (isObject(arg)) {
-        return JSON.stringify(arg);
-    }
-    else {
-        return arg;
-    }
+var formatFuncMap = {
+    '[object Undefined]': function () { return 'undefined'; },
+    '[object Null]': function () { return 'null'; },
+    '[object Number]': function (value) { return value.toString(); },
+    '[object String]': function (value) { return value.toString(); },
+    '[object Boolean]': function (value) { return value ? 'true' : 'false'; },
+    '[object Symbol]': function (value) { return "Symbol(" + value + ")"; },
+    '[object Function]': function (value) { return value.toString(); },
+    '[object Array]': function (value) { return "[" + value.join(', ') + "]"; },
+    '[object Object]': function (value) { return JSON.stringify(value); },
+};
+function format(value) {
+    return formatFuncMap[toString(value)](value);
 }
 exports.format = format;
+function getNode(id) {
+    return document.querySelector("[onscreenconsole-id=\"" + id + "\"]");
+}
+exports.getNode = getNode;
 //# sourceMappingURL=utils.js.map

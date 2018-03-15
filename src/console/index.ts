@@ -1,19 +1,14 @@
-import { MAX_HISTORY_LENGTH } from '../shared/constants'
-import { format } from '../shared/utils'
-
-type consoleFunc = (message?: any, ...optionalParams: any[]) => void
-
-type supportedMethods = 'log' | 'warn' | 'error'
-
+import { MAX_HISTORY_LENGTH, SUPPORTED_COLORS, SUPPORTED_METHODS, ConsoleFunc } from '../shared/constants'
+import { format, getNode } from '../shared/utils'
+ 
 class OnScreenConsole {
 	private _showBtn: HTMLButtonElement
 	private _hideBtn: HTMLButtonElement
 	private _consoleNode: HTMLDivElement
 	private _inputNode: HTMLInputElement
-  private _log: consoleFunc
-  private _warn: consoleFunc
-  private _error: consoleFunc
-  private static _instance: OnScreenConsole
+  private _log: ConsoleFunc
+  private _warn: ConsoleFunc
+  private _error: ConsoleFunc
 
 	constructor() {
 		this._createNodes()
@@ -32,9 +27,9 @@ class OnScreenConsole {
 			if (prevOnerror) {
 				prevOnerror(info, path, line, col, err)
 			}
-			const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]')
+			const consoleNode: Element = getNode('panel')
 			if (consoleNode) {
-				if (err && err.stack) {
+				if (err && err.stack && !~err.stack.indexOf('HTMLInputElement._inputNode.onkeydown')) {
 					console.error(err.stack)
 				} else {
 					console.error(info)
@@ -51,9 +46,9 @@ class OnScreenConsole {
 	 * overwrite log, warn and error method
 	 */
 	private _overwriteNativeMethods(): void {
-    for (const method of OnScreenConsole._supportedMethods) {
+    for (const method of SUPPORTED_METHODS) {
       ;(this as any)[`_${method}`] = (console as any)[method].bind(console)
-      ;(console as any)[method] = this._print(method as supportedMethods).bind(this)
+      ;(console as any)[method] = this._print(method).bind(this)
     }
 	}
 	/**
@@ -142,39 +137,21 @@ class OnScreenConsole {
 		}
 		this._inputNode.onkeydown = (e: KeyboardEvent) => {
       const value: string = (e.target as any).value
-      if (e.keyCode === 13 && value !== '') {	// enter
-        let result: string
-				let evalErr: Error
-				// disable console temporarily
-				const tmpConsole: Console = console
-				;(console as any) = {}
-				for (const method of OnScreenConsole._supportedMethods) {
-					;(console as any)[method] = () => {}
-				}
-        try {
-          result = eval(value)
-        } catch(err) {
-          evalErr = err
-				}
-				// restore console
-				console = tmpConsole
-        if (evalErr) {
-          console.error(evalErr)
-        } else {
-          console.log(`<span style="color: #00000055">></span> ${value}`)
-          const tmpScript = document.createElement('script')
-          tmpScript.innerHTML = value
-          document.body.appendChild(tmpScript)
-          tmpScript.remove()
-          console.log(`<span style="color: #00000055"><</span> ${format(result)}`)
-        }
+			if (e.keyCode === 13 && value !== '') {	// enter
+				// execute the script
+				console.log(`<span style="color: #00000055">></span> ${value}`)
+				const tmpScript = document.createElement('script')
+				tmpScript.innerHTML = value
+				document.body.appendChild(tmpScript)
+				tmpScript.remove()
+				// save the history
         history.push(value)
         while (history.length > MAX_HISTORY_LENGTH) {
           history.shift()
         }
         localStorage.setItem('onscreen-console-history', JSON.stringify(history))
         this._inputNode.value = ''
-        hisIndex = history.length
+				hisIndex = history.length
 			} else if (e.keyCode === 38) {	// up
 				if (hisIndex > 0) {
 					hisIndex--
@@ -196,21 +173,21 @@ class OnScreenConsole {
   }
 	/**
 	 * internal print method
-	 * @param {string} method enum {'log', 'warn', 'error'}
+	 * @param {string} method
 	 */
-	_print(method: 'log' | 'warn' | 'error'): consoleFunc {
+	_print(method: string): ConsoleFunc {
 		return function(...args: any[]): void {
 			// check if it's enable
-			const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]')
+			const consoleNode: Element = getNode('panel')
 			if (consoleNode) {
         // create error message dom element
         const msgNode: HTMLDivElement = document.createElement('div')
         msgNode.style.cssText = `
           min-height: 20px;
           font-size: 14px;
-          color: ${OnScreenConsole._supportedColors[method]};
-          background-color: ${OnScreenConsole._supportedColors[method]}11;
-          border-top: 1px solid ${OnScreenConsole._supportedColors[method]}33;
+          color: ${SUPPORTED_COLORS[method]};
+          background-color: ${SUPPORTED_COLORS[method]}11;
+          border-top: 1px solid ${SUPPORTED_COLORS[method]}33;
           padding: 6px 12px;
         `
         // set innerHTML
@@ -233,11 +210,11 @@ class OnScreenConsole {
 	 * enable the on screen console
 	 */
 	enable(): void {
-		const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]')
+		const consoleNode: Element = getNode('panel')
 		if (!consoleNode) {
 			document.body.appendChild(this._consoleNode)
 		}
-		const showBtn: Element = document.querySelector('[onscreenconsole-id="show"]')
+		const showBtn: Element = getNode('show')
 		if (!showBtn) {
 			document.body.appendChild(this._showBtn)
 		}
@@ -246,11 +223,11 @@ class OnScreenConsole {
 	 * disable the on screen console
 	 */
 	disable(): void {
-		const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]')
+		const consoleNode: Element = getNode('panel')
 		if (consoleNode) {
 			consoleNode.remove()
 		}
-		const showBtn: Element = document.querySelector('[onscreenconsole-id="show"]')
+		const showBtn: Element = getNode('show')
 		if (showBtn) {
 			showBtn.remove()	
 		}
@@ -259,7 +236,7 @@ class OnScreenConsole {
 	 * show the on screen console
 	 */
 	show(): void {
-		const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]')
+		const consoleNode: Element = getNode('panel')
 		if (consoleNode && this._consoleNode.style.bottom !== '0px') {
       this._consoleNode.style.bottom = '0px'
 			this._hideBtn.style.bottom = '6px'
@@ -269,45 +246,12 @@ class OnScreenConsole {
 	 * hide the on screen console
 	 */
 	hide(): void {
-		const consoleNode: Element = document.querySelector('[onscreenconsole-id="panel"]')
+		const consoleNode: Element = getNode('panel')
 		if (consoleNode && this._consoleNode.style.bottom === '0px') {
 			this._consoleNode.style.bottom = (-this._consoleNode.offsetHeight - 10) + 'px'
       this._hideBtn.style.bottom = (-this._consoleNode.offsetHeight - 4) + 'px'
 		}
 	}
-  // others
-  /**
-	 * supported console methods
-	 */
-	static get _supportedMethods(): string[] {
-		return ['log', 'warn', 'error']
-	}
-	/**
-	 * colors corresponding to supported methods
-	 */
-	static get _supportedColors(): {
-    log: string
-    warn: string
-    error: string
-  } {
-		return {
-			log: '#0B1013',
-			warn: '#C99833',
-			error: '#CB1B45',
-		}
-	}
-	// singleton
-	/**
-	 * get singleton to ensure only one on screen console panel
-	 */
-	static get instance() {
-		if (!this._instance) {
-			this._instance = new OnScreenConsole()
-		}
-		return this._instance
-	}
 }
 
-const oConsole: OnScreenConsole = OnScreenConsole.instance
-
-export default oConsole
+export default new OnScreenConsole()
