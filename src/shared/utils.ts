@@ -28,6 +28,10 @@ export function format(value: any): string {
   return (formatFuncMap as any)[toString(value)](value)
 }
 
+/**
+ * get dom node by onscreenconsole-id
+ * @param id onscreenconsole-id
+ */
 export function getNode(id: string): Element {
   return document.querySelector(`[onscreenconsole-id="${id}"]`)
 }
