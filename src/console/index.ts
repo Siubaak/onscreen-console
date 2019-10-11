@@ -120,6 +120,7 @@ class OnScreenConsole {
 		this._hideBtn.onclick = this.hide.bind(this)
 
 		this._inputNode = document.createElement('input')
+		this._inputNode.id = 'console-input'
 		this._inputNode.placeholder = '>'
 		this._inputNode.style.cssText = `
 			overflow: scroll;
