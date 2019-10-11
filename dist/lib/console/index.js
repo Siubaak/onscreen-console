@@ -52,11 +52,13 @@ var OnScreenConsole = (function () {
         this._showBtn.onclick = this.show.bind(this);
         this._hideBtn = document.createElement('button');
         this._hideBtn.className = 'console-button';
+        this._hideBtn.setAttribute('onscreenconsole-id', 'hide');
         this._hideBtn.style.cssText = "\n\t\t\tposition: fixed;\n\t\t\tz-index: 999;\n\t\t\theight: 32px;\n\t\t\twidth: 48px;\n\t\t\tbottom: 6px;\n\t\t\tright: 6px;\n\t\t\tcolor: #0089A7;\n\t\t\tborder: 1px solid #0089A7;\n\t\t\tbackground-color: #fff;\n\t\t\tcursor: pointer;\n\t\t\t-webkit-box-shadow: 0 2px 5px #00000033;\n\t\t\t\t\t\t\tbox-shadow: 0 2px 5px #00000033;\n\t\t\ttransition: all .2s;\n\t\t";
         this._hideBtn.innerHTML = 'Hide';
         this._hideBtn.onclick = this.hide.bind(this);
         this._inputNode = document.createElement('input');
         this._inputNode.className = 'console-input';
+        this._inputNode.setAttribute('onscreenconsole-id', 'input');
         this._inputNode.placeholder = '>';
         this._inputNode.style.cssText = "\n\t\t\toverflow: scroll;\n\t\t\tpadding: 6px 12px;\n\t\t\tfont-size: 10px;\n\t\t\tborder: none;\n\t\t\toutline: none;\n\t\t\tresize: none;\n\t\t\tborder-top: 1px solid #00000033;\n\t\t\twidth: 100%;\n\t\t\t-webkit-box-sizing: border-box;\n\t\t\t\t\t\t\tbox-sizing: border-box;\n\t\t";
         this._consoleNode.onclick = this._inputNode.focus.bind(this._inputNode);

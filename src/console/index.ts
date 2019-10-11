@@ -101,6 +101,7 @@ class OnScreenConsole {
 
 		this._hideBtn = document.createElement('button')
 		this._hideBtn.className = 'console-button'
+		this._hideBtn.setAttribute('onscreenconsole-id', 'hide')
 		this._hideBtn.style.cssText = `
 			position: fixed;
 			z-index: 999;
@@ -121,6 +122,7 @@ class OnScreenConsole {
 
 		this._inputNode = document.createElement('input')
 		this._inputNode.className = 'console-input'
+		this._inputNode.setAttribute('onscreenconsole-id', 'input')
 		this._inputNode.placeholder = '>'
 		this._inputNode.style.cssText = `
 			overflow: scroll;
