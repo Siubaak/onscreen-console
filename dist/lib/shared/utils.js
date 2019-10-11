@@ -9,7 +9,7 @@ var formatFuncMap = {
     '[object Number]': function (value) { return value.toString(); },
     '[object String]': function (value) { return value.toString(); },
     '[object Boolean]': function (value) { return value ? 'true' : 'false'; },
-    '[object Symbol]': function (value) { return "Symbol(" + value + ")"; },
+    '[object Symbol]': function (value) { return "Symbol(" + value.toString() + ")"; },
     '[object Function]': function (value) { return value.toString(); },
     '[object Array]': function (value) { return "[" + value.join(', ') + "]"; },
     '[object Object]': function (value) { return JSON.stringify(value); },

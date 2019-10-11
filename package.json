@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "tsc && webpack && cp dist/min/onscreen-console.min.js docs/index.js",
+    "start-windows": "tsc && webpack && copy dist\\min\\onscreen-console.min.js docs\\index.js /Y",
     "build": "tsc && webpack"
   },
   "repository": {
@@ -24,8 +25,8 @@
   "homepage": "https://github.com/Siubaak/onscreen-console#readme",
   "devDependencies": {
     "ts-loader": "^3.5.0",
-    "typescript": "^2.7.2",
-    "uglifyjs-webpack-plugin": "^1.2.0",
-    "webpack": "^3.11.0"
+    "typescript": "^3.6.4",
+    "uglifyjs-webpack-plugin": "^1.3.0",
+    "webpack": "^3.12.0"
   }
 }

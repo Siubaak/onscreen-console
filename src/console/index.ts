@@ -6,11 +6,13 @@ class OnScreenConsole {
 	private _hideBtn: HTMLButtonElement
 	private _consoleNode: HTMLDivElement
 	private _inputNode: HTMLInputElement
-  private _log: ConsoleFunc
-  private _warn: ConsoleFunc
-  private _error: ConsoleFunc
+	private _log: ConsoleFunc
+	private _warn: ConsoleFunc
+	private _error: ConsoleFunc
+	private _isShown: boolean;
 
 	constructor() {
+		this._isShown = false;
 		this._createNodes()
 		this._overwriteNativeMethods()
 		this._setErrorListener()
@@ -19,7 +21,7 @@ class OnScreenConsole {
 	 * set the init listener
 	 */
 	private _setErrorListener(): void {
-		const prevOnerror: ErrorEventHandler = window.onerror
+		const prevOnerror = window.onerror;
 		// add error listener for trying the js error
 		// or manually throw error
 		window.onerror = (info, path, line, col, err) => {
@@ -56,6 +58,7 @@ class OnScreenConsole {
 	 */
 	private _createNodes(): void {
 		this._consoleNode = document.createElement('div')
+		this._consoleNode.className = "console-panel"
 		this._consoleNode.setAttribute('onscreenconsole-id', 'panel')
 		this._consoleNode.style.cssText = `
 			cursor: default;
@@ -65,7 +68,8 @@ class OnScreenConsole {
 			width: 100%;
 			bottom: -250px;
 			left: 0;
-			overflow: scroll;
+			overflow-x: auto; 
+			overflow-y: auto;
 			background-color: #fff;
 			-webkit-box-shadow: 0 -5px 10px #00000033;
 							box-shadow: 0 -5px 10px #00000033;
@@ -75,6 +79,7 @@ class OnScreenConsole {
 		`
 
 		this._showBtn = document.createElement('button')
+		this._showBtn.className = 'console-button'
 		this._showBtn.setAttribute('onscreenconsole-id', 'show')
 		this._showBtn.style.cssText = `
 			position: fixed;
@@ -95,6 +100,8 @@ class OnScreenConsole {
 		this._showBtn.onclick = this.show.bind(this)
 
 		this._hideBtn = document.createElement('button')
+		this._hideBtn.className = 'console-button'
+		this._hideBtn.setAttribute('onscreenconsole-id', 'hide')
 		this._hideBtn.style.cssText = `
 			position: fixed;
 			z-index: 999;
@@ -112,14 +119,15 @@ class OnScreenConsole {
 		`
 		this._hideBtn.innerHTML = 'Hide'
 		this._hideBtn.onclick = this.hide.bind(this)
-		this._consoleNode.appendChild(this._hideBtn)
 
 		this._inputNode = document.createElement('input')
+		this._inputNode.className = 'console-input'
+		this._inputNode.setAttribute('onscreenconsole-id', 'input')
 		this._inputNode.placeholder = '>'
 		this._inputNode.style.cssText = `
 			overflow: scroll;
 			padding: 6px 12px;
-			font-size: 14px;
+			font-size: 10px;
 			border: none;
 			outline: none;
 			resize: none;
@@ -128,6 +136,8 @@ class OnScreenConsole {
 			-webkit-box-sizing: border-box;
 							box-sizing: border-box;
 		`
+		this._consoleNode.onclick = this._inputNode.focus.bind(this._inputNode);
+
 		let history: string[] = JSON.parse(localStorage.getItem('onscreen-console-history'))
 		let hisIndex: number = -1
 		if (!Array.isArray(history)) {
@@ -181,7 +191,8 @@ class OnScreenConsole {
 			const consoleNode: Element = getNode('panel')
 			if (consoleNode) {
         // create error message dom element
-        const msgNode: HTMLDivElement = document.createElement('div')
+		const msgNode: HTMLDivElement = document.createElement('div')
+		msgNode.className = 'console-message'
         msgNode.style.cssText = `
           min-height: 20px;
           font-size: 14px;
@@ -209,13 +220,17 @@ class OnScreenConsole {
 	/**
 	 * enable the on screen console
 	 */
-	enable(): void {
+	enable(displayButton: boolean = true): void {
 		const consoleNode: Element = getNode('panel')
 		if (!consoleNode) {
 			document.body.appendChild(this._consoleNode)
 		}
+		const hideBtn: Element = getNode('hide')
+		if (!hideBtn && displayButton) {
+			this._consoleNode.appendChild(this._hideBtn)
+		}
 		const showBtn: Element = getNode('show')
-		if (!showBtn) {
+		if (!showBtn && displayButton) {
 			document.body.appendChild(this._showBtn)
 		}
 	}
@@ -229,7 +244,7 @@ class OnScreenConsole {
 		}
 		const showBtn: Element = getNode('show')
 		if (showBtn) {
-			showBtn.remove()	
+			showBtn.remove()
 		}
 	}
 	/**
@@ -238,9 +253,10 @@ class OnScreenConsole {
 	show(): void {
 		const consoleNode: Element = getNode('panel')
 		if (consoleNode && this._consoleNode.style.bottom !== '0px') {
-      this._consoleNode.style.bottom = '0px'
+			this._consoleNode.style.bottom = '0px'
 			this._hideBtn.style.bottom = '6px'
-    }
+    	}
+		this._isShown = true
 	}
 	/**
 	 * hide the on screen console
@@ -248,9 +264,16 @@ class OnScreenConsole {
 	hide(): void {
 		const consoleNode: Element = getNode('panel')
 		if (consoleNode && this._consoleNode.style.bottom === '0px') {
-			this._consoleNode.style.bottom = (-this._consoleNode.offsetHeight - 10) + 'px'
-      this._hideBtn.style.bottom = (-this._consoleNode.offsetHeight - 4) + 'px'
+			this._consoleNode.style.bottom = (-this._consoleNode.offsetHeight - 10) + 'px'			
+      		this._hideBtn.style.bottom = (-this._consoleNode.offsetHeight - 4) + 'px'
 		}
+		this._isShown = false
+	}
+	/**
+	 * Check if the console is visible
+	 */
+	isShown(): boolean {
+		return this._isShown;
 	}
 }
 
