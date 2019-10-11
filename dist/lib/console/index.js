@@ -59,6 +59,7 @@ var OnScreenConsole = (function () {
         this._inputNode.id = 'console-input';
         this._inputNode.placeholder = '>';
         this._inputNode.style.cssText = "\n\t\t\toverflow: scroll;\n\t\t\tpadding: 6px 12px;\n\t\t\tfont-size: 14px;\n\t\t\tborder: none;\n\t\t\toutline: none;\n\t\t\tresize: none;\n\t\t\tborder-top: 1px solid #00000033;\n\t\t\twidth: 100%;\n\t\t\t-webkit-box-sizing: border-box;\n\t\t\t\t\t\t\tbox-sizing: border-box;\n\t\t";
+        this._consoleNode.onclick = this._inputNode.focus.bind(this._inputNode);
         var history = JSON.parse(localStorage.getItem('onscreen-console-history'));
         var hisIndex = -1;
         if (!Array.isArray(history)) {

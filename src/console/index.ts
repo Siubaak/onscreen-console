@@ -134,6 +134,8 @@ class OnScreenConsole {
 			-webkit-box-sizing: border-box;
 							box-sizing: border-box;
 		`
+		this._consoleNode.onclick = this._inputNode.focus.bind(this._inputNode);
+
 		let history: string[] = JSON.parse(localStorage.getItem('onscreen-console-history'))
 		let hisIndex: number = -1
 		if (!Array.isArray(history)) {
