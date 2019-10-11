@@ -41,14 +41,17 @@ var OnScreenConsole = (function () {
     OnScreenConsole.prototype._createNodes = function () {
         var _this = this;
         this._consoleNode = document.createElement('div');
+        this._consoleNode.id = "console-panel";
         this._consoleNode.setAttribute('onscreenconsole-id', 'panel');
         this._consoleNode.style.cssText = "\n\t\t\tcursor: default;\n\t\t\tposition: fixed;\n\t\t\tz-index: 995;\n\t\t\theight: 240px;\n\t\t\twidth: 100%;\n\t\t\tbottom: -250px;\n\t\t\tleft: 0;\n\t\t\toverflow-x: auto; \n\t\t\toverflow-y: auto;\n\t\t\tbackground-color: #fff;\n\t\t\t-webkit-box-shadow: 0 -5px 10px #00000033;\n\t\t\t\t\t\t\tbox-shadow: 0 -5px 10px #00000033;\n\t\t\t-webkit-box-sizing: border-box;\n\t\t\t\t\t\t\tbox-sizing: border-box;\n\t\t\ttransition: all .2s;\n\t\t";
         this._showBtn = document.createElement('button');
+        this._showBtn.id = 'console-button-show';
         this._showBtn.setAttribute('onscreenconsole-id', 'show');
         this._showBtn.style.cssText = "\n\t\t\tposition: fixed;\n\t\t\tz-index: 990;\n\t\t\theight: 32px;\n\t\t\twidth: 48px;\n\t\t\tbottom: 6px;\n\t\t\tright: 6px;\n\t\t\tcolor: #0089A7;\n\t\t\tborder: 1px solid #0089A7;\n\t\t\tbackground-color: #fff;\n\t\t\tcursor: pointer;\n\t\t\t-webkit-box-shadow: 0 2px 5px #00000033;\n\t\t\t\t\t\t\tbox-shadow: 0 2px 5px #00000033;\n\t\t\ttransition: all .2s;\n\t\t";
         this._showBtn.innerHTML = 'Show';
         this._showBtn.onclick = this.show.bind(this);
         this._hideBtn = document.createElement('button');
+        this._hideBtn.id = 'console-button-hide';
         this._hideBtn.style.cssText = "\n\t\t\tposition: fixed;\n\t\t\tz-index: 999;\n\t\t\theight: 32px;\n\t\t\twidth: 48px;\n\t\t\tbottom: 6px;\n\t\t\tright: 6px;\n\t\t\tcolor: #0089A7;\n\t\t\tborder: 1px solid #0089A7;\n\t\t\tbackground-color: #fff;\n\t\t\tcursor: pointer;\n\t\t\t-webkit-box-shadow: 0 2px 5px #00000033;\n\t\t\t\t\t\t\tbox-shadow: 0 2px 5px #00000033;\n\t\t\ttransition: all .2s;\n\t\t";
         this._hideBtn.innerHTML = 'Hide';
         this._hideBtn.onclick = this.hide.bind(this);
