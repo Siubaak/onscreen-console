@@ -58,6 +58,7 @@ class OnScreenConsole {
 	 */
 	private _createNodes(): void {
 		this._consoleNode = document.createElement('div')
+		this._consoleNode.id = "console-panel"
 		this._consoleNode.setAttribute('onscreenconsole-id', 'panel')
 		this._consoleNode.style.cssText = `
 			cursor: default;
@@ -78,6 +79,7 @@ class OnScreenConsole {
 		`
 
 		this._showBtn = document.createElement('button')
+		this._showBtn.id = 'console-button-show'
 		this._showBtn.setAttribute('onscreenconsole-id', 'show')
 		this._showBtn.style.cssText = `
 			position: fixed;
@@ -98,6 +100,7 @@ class OnScreenConsole {
 		this._showBtn.onclick = this.show.bind(this)
 
 		this._hideBtn = document.createElement('button')
+		this._hideBtn.id = 'console-button-hide'
 		this._hideBtn.style.cssText = `
 			position: fixed;
 			z-index: 999;
