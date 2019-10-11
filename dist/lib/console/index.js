@@ -41,24 +41,24 @@ var OnScreenConsole = (function () {
     OnScreenConsole.prototype._createNodes = function () {
         var _this = this;
         this._consoleNode = document.createElement('div');
-        this._consoleNode.id = "console-panel";
+        this._consoleNode.className = "console-panel";
         this._consoleNode.setAttribute('onscreenconsole-id', 'panel');
         this._consoleNode.style.cssText = "\n\t\t\tcursor: default;\n\t\t\tposition: fixed;\n\t\t\tz-index: 995;\n\t\t\theight: 240px;\n\t\t\twidth: 100%;\n\t\t\tbottom: -250px;\n\t\t\tleft: 0;\n\t\t\toverflow-x: auto; \n\t\t\toverflow-y: auto;\n\t\t\tbackground-color: #fff;\n\t\t\t-webkit-box-shadow: 0 -5px 10px #00000033;\n\t\t\t\t\t\t\tbox-shadow: 0 -5px 10px #00000033;\n\t\t\t-webkit-box-sizing: border-box;\n\t\t\t\t\t\t\tbox-sizing: border-box;\n\t\t\ttransition: all .2s;\n\t\t";
         this._showBtn = document.createElement('button');
-        this._showBtn.id = 'console-button-show';
+        this._showBtn.className = 'console-button';
         this._showBtn.setAttribute('onscreenconsole-id', 'show');
         this._showBtn.style.cssText = "\n\t\t\tposition: fixed;\n\t\t\tz-index: 990;\n\t\t\theight: 32px;\n\t\t\twidth: 48px;\n\t\t\tbottom: 6px;\n\t\t\tright: 6px;\n\t\t\tcolor: #0089A7;\n\t\t\tborder: 1px solid #0089A7;\n\t\t\tbackground-color: #fff;\n\t\t\tcursor: pointer;\n\t\t\t-webkit-box-shadow: 0 2px 5px #00000033;\n\t\t\t\t\t\t\tbox-shadow: 0 2px 5px #00000033;\n\t\t\ttransition: all .2s;\n\t\t";
         this._showBtn.innerHTML = 'Show';
         this._showBtn.onclick = this.show.bind(this);
         this._hideBtn = document.createElement('button');
-        this._hideBtn.id = 'console-button-hide';
+        this._hideBtn.className = 'console-button';
         this._hideBtn.style.cssText = "\n\t\t\tposition: fixed;\n\t\t\tz-index: 999;\n\t\t\theight: 32px;\n\t\t\twidth: 48px;\n\t\t\tbottom: 6px;\n\t\t\tright: 6px;\n\t\t\tcolor: #0089A7;\n\t\t\tborder: 1px solid #0089A7;\n\t\t\tbackground-color: #fff;\n\t\t\tcursor: pointer;\n\t\t\t-webkit-box-shadow: 0 2px 5px #00000033;\n\t\t\t\t\t\t\tbox-shadow: 0 2px 5px #00000033;\n\t\t\ttransition: all .2s;\n\t\t";
         this._hideBtn.innerHTML = 'Hide';
         this._hideBtn.onclick = this.hide.bind(this);
         this._inputNode = document.createElement('input');
-        this._inputNode.id = 'console-input';
+        this._inputNode.className = 'console-input';
         this._inputNode.placeholder = '>';
-        this._inputNode.style.cssText = "\n\t\t\toverflow: scroll;\n\t\t\tpadding: 6px 12px;\n\t\t\tfont-size: 14px;\n\t\t\tborder: none;\n\t\t\toutline: none;\n\t\t\tresize: none;\n\t\t\tborder-top: 1px solid #00000033;\n\t\t\twidth: 100%;\n\t\t\t-webkit-box-sizing: border-box;\n\t\t\t\t\t\t\tbox-sizing: border-box;\n\t\t";
+        this._inputNode.style.cssText = "\n\t\t\toverflow: scroll;\n\t\t\tpadding: 6px 12px;\n\t\t\tfont-size: 10px;\n\t\t\tborder: none;\n\t\t\toutline: none;\n\t\t\tresize: none;\n\t\t\tborder-top: 1px solid #00000033;\n\t\t\twidth: 100%;\n\t\t\t-webkit-box-sizing: border-box;\n\t\t\t\t\t\t\tbox-sizing: border-box;\n\t\t";
         this._consoleNode.onclick = this._inputNode.focus.bind(this._inputNode);
         var history = JSON.parse(localStorage.getItem('onscreen-console-history'));
         var hisIndex = -1;
@@ -115,6 +115,7 @@ var OnScreenConsole = (function () {
             var consoleNode = utils_1.getNode('panel');
             if (consoleNode) {
                 var msgNode = document.createElement('div');
+                msgNode.className = 'console-message';
                 msgNode.style.cssText = "\n          min-height: 20px;\n          font-size: 14px;\n          color: " + constants_1.SUPPORTED_COLORS[method] + ";\n          background-color: " + constants_1.SUPPORTED_COLORS[method] + "11;\n          border-top: 1px solid " + constants_1.SUPPORTED_COLORS[method] + "33;\n          padding: 6px 12px;\n        ";
                 var msg = [];
                 for (var _a = 0, args_1 = args; _a < args_1.length; _a++) {

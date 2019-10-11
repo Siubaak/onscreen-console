@@ -58,7 +58,7 @@ class OnScreenConsole {
 	 */
 	private _createNodes(): void {
 		this._consoleNode = document.createElement('div')
-		this._consoleNode.id = "console-panel"
+		this._consoleNode.className = "console-panel"
 		this._consoleNode.setAttribute('onscreenconsole-id', 'panel')
 		this._consoleNode.style.cssText = `
 			cursor: default;
@@ -79,7 +79,7 @@ class OnScreenConsole {
 		`
 
 		this._showBtn = document.createElement('button')
-		this._showBtn.id = 'console-button-show'
+		this._showBtn.className = 'console-button'
 		this._showBtn.setAttribute('onscreenconsole-id', 'show')
 		this._showBtn.style.cssText = `
 			position: fixed;
@@ -100,7 +100,7 @@ class OnScreenConsole {
 		this._showBtn.onclick = this.show.bind(this)
 
 		this._hideBtn = document.createElement('button')
-		this._hideBtn.id = 'console-button-hide'
+		this._hideBtn.className = 'console-button'
 		this._hideBtn.style.cssText = `
 			position: fixed;
 			z-index: 999;
@@ -120,12 +120,12 @@ class OnScreenConsole {
 		this._hideBtn.onclick = this.hide.bind(this)
 
 		this._inputNode = document.createElement('input')
-		this._inputNode.id = 'console-input'
+		this._inputNode.className = 'console-input'
 		this._inputNode.placeholder = '>'
 		this._inputNode.style.cssText = `
 			overflow: scroll;
 			padding: 6px 12px;
-			font-size: 14px;
+			font-size: 10px;
 			border: none;
 			outline: none;
 			resize: none;
@@ -189,7 +189,8 @@ class OnScreenConsole {
 			const consoleNode: Element = getNode('panel')
 			if (consoleNode) {
         // create error message dom element
-        const msgNode: HTMLDivElement = document.createElement('div')
+		const msgNode: HTMLDivElement = document.createElement('div')
+		msgNode.className = 'console-message'
         msgNode.style.cssText = `
           min-height: 20px;
           font-size: 14px;
