@@ -23,9 +23,9 @@
   },
   "homepage": "https://github.com/Siubaak/onscreen-console#readme",
   "devDependencies": {
-    "ts-loader": "^3.5.0",
+    "ts-loader": "^9.4.2",
     "typescript": "^2.7.2",
     "uglifyjs-webpack-plugin": "^1.2.0",
-    "webpack": "^3.11.0"
+    "webpack": "^5.75.0"
   }
 }
